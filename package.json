@@ -1,0 +1,13 @@
+{  
+  "name": "check-this-domain(twitter-bot)",  
+  "version": "0.0.1",  
+  "dependencies" : {  
+ 			"Domai.nr": "1.0.0"
+  	, "express": "2.5.9"
+  	, "ntwitter": "0.3.0"
+  	, "request": "2.9.200"
+  },  
+  "engine": {  
+    "node": ">=0.6"  
+  }  
+}
