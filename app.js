@@ -3,6 +3,13 @@ var express     = require('express')
 	, sys 				= require('sys')
 	, domainr 		= require('Domai.nr')
   , request     = require('request')
+  
+
+if (process.env.USER === "cnnr") {
+  config      = require('./config')
+}
+
+
 
 var app = express.createServer(express.logger()),
     port = process.env.PORT || 3000;
@@ -12,10 +19,10 @@ app.listen(port, function() {
 });
 
 var twit = new Twitter({
-    consumer_key: process.env['CONSUMER_KEY']
-  , consumer_secret: process.env['CONSUMER_SECRET']
-  , access_token_key: process.env['TOKEN_KEY']
-  , access_token_secret: process.env['TOKEN_SECRET']
+    consumer_key: process.env['CONSUMER_KEY'] || config.CONSUMER_KEY
+  , consumer_secret: process.env['CONSUMER_SECRET'] || config.CONSUMER_SECRET
+  , access_token_key: process.env['TOKEN_KEY'] || config.TOKEN_KEY
+  , access_token_secret: process.env['TOKEN_SECRET'] || config.TOKEN_SECRET
 })
 
 
@@ -40,26 +47,27 @@ var twit = new Twitter({
               expanded_url = response.request.host
 
               domainr.info(expanded_url, function(responseFromDomainer) {
-                switch (responseFromDomainer.availability) {
+
+                condole.log(responseFromDomainer)
+
+                /*switch (responseFromDomainer.availability) {
                   case "available":
-                    // some template & link to register
+                    twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainer.registrars.register_url + " <3", function(err, data) {
+                      if (err) { console.log(err) }
+                    })
                     break;
                   case "taken":
-                    // some template
+                    twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is taken =(", function(err, data) {
+                      if (err) { console.log(err) }
+                    })
                     break;
                   case "unknown":
-                    // some template
+                    twit.updateStatus('@' + userToRespondTo + " hmmm. Domai.nr says it's 'unknown'. Why don't you check on their site? http://domai.nr", function(err, data) {
+                      if (err) { console.log(err) }
+                    })
                     break;
-                }
+                }*/
 
-
-                // TODO
-                // follow the user who tweeted at me.
-
-                // CON, CHANGE THIS!
-                /*twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is: " + responseFromDomainer.availability + ".", function(err, data) {
-                  if (err) { console.log(err) }
-                })*/
 
 
               })
