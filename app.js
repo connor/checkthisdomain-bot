@@ -3,7 +3,6 @@ var express     = require('express')
 	, sys 				= require('sys')
 	, domainr 		= require('Domai.nr')
   , request     = require('request')
-  , config      = require('./config')
 
 var app = express.createServer(express.logger()),
     port = process.env.PORT || 3000;
@@ -13,10 +12,10 @@ app.listen(port, function() {
 });
 
 var twit = new Twitter({
-    consumer_key: config.consumer_key
-  , consumer_secret: config.consumer_secret
-  , access_token_key: config.access_token_key
-  , access_token_secret: config.access_token_secret
+    consumer_key: process.env['CONSUMER_KEY']
+  , consumer_secret: process.env['CONSUMER_SECRET']
+  , access_token_key: process.env['TOKEN_KEY']
+  , access_token_secret: process.env['TOKEN_SECRET']
 })
 
 
@@ -35,16 +34,34 @@ var twit = new Twitter({
 
           // TODO:
           // 1. follow user that tweets at us
-          // 2. include link in response to register_url
 
           request(shortened_url, function(error, response, body) {
             if (!error && response.statusCode === 200) {
               expanded_url = response.request.host
 
               domainr.info(expanded_url, function(responseFromDomainer) {
-                twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is: " + responseFromDomainer.availability + ".", function(err, data) {
+                switch (responseFromDomainer.availability) {
+                  case "available":
+                    // some template & link to register
+                    break;
+                  case "taken":
+                    // some template
+                    break;
+                  case "unknown":
+                    // some template
+                    break;
+                }
+
+
+                // TODO
+                // follow the user who tweeted at me.
+
+                // CON, CHANGE THIS!
+                /*twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is: " + responseFromDomainer.availability + ".", function(err, data) {
                   if (err) { console.log(err) }
-                })
+                })*/
+
+
               })
             }
           })
