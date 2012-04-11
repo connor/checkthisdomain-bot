@@ -45,39 +45,49 @@ twit
             var json_body = JSON.parse( body )
             
             expanded_url = decodeURIComponent( json_body.end_url ) // like: http://example.com
-
             expanded_url = expanded_url.substr(expanded_url.indexOf('://')+3) // like: example.com
 
-            domainr.info(expanded_url, function(responseFromDomainr) {
-       
-                console.log(responseFromDomainr)
+            console.log(expanded_url.length)
 
-              switch (responseFromDomainr.availability) {
+            if (expanded_url.length >= 50) {
+              twit.updateStatus('@' + userToRespondTo + " sorry, " + shortened_url + " is a bit too long for me to test. Check out domai.nr, though!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
+                  if (err) { console.log(err) }
+              })
+            } else {
+                domainr.info(expanded_url, function(responseFromDomainr) {
+         
+                  switch (responseFromDomainr.availability) {
 
-                case "available":
-                  twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
-                    if (err) { console.log(err) }
-                  })
-                break;
+                    case "available":
+                      twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
+                        if (err) { console.log(err) }
+                      })
+                    break;
 
-                case "taken":
-                  twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is taken =(", function(err, data) {
-                    if (err) { console.log(err) }
-                  })
-                  break;
+                    case "taken":
+                      twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is taken =(", function(err, data) {
+                        if (err) { console.log(err) }
+                      })
+                      break;
 
-                case "unknown":
-                  twit.updateStatus('@' + userToRespondTo + " hmmm. Domai.nr says it's 'unknown'. Why don't you check on their site? http://domai.nr", function(err, data) {
-                    if (err) { console.log(err) }
-                  })
-                  break;
-              }
+                    case "unknown":
+                      twit.updateStatus('@' + userToRespondTo + " hmmm. Domai.nr says it's 'unknown'. Why don't you check on their site? http://domai.nr", function(err, data) {
+                        if (err) { console.log(err) }
+                      })
+                      break;
 
-            })
+                    case "default":
+                      twit.updateStatus('@' + userToRespondTo + " hmmm. not sure what's wrong, but something is. Please use domai.nr.", function(err, data) {
+                        if (err) { console.log(err) }
+                      })
+                      break;
+                  }
 
+              })
+            }
 
           } else {
-            twit.updateStatus('@' + userToRespondTo + " that is an INVALID search. Make sure it's a valid domain, or use http://domai.nr. Thx!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
+            twit.updateStatus('@' + userToRespondTo + " that is an invalid search. Make sure it's a valid domain, or use http://domai.nr. Thx!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
                 if (err) { console.log(err) }
               }
             )
