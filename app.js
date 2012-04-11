@@ -42,6 +42,8 @@ twit
   .stream('statuses/filter', {'track':'@checkthisdomain'}, function(stream) {
     stream.on('data', function (tweet) {
 
+      console.log("tweet is: " + tweet)
+
       if (tweet.in_reply_to_screen_name === "checkthisdomain" && !tweet.retweeted) {
 
         var shortened_url       = encodeURIComponent( tweet.text.split(' ')[1] )
@@ -56,6 +58,8 @@ twit
             
             expanded_url = decodeURIComponent( json_body.end_url ) // like: http://example.com
             expanded_url = expanded_url.substr(expanded_url.indexOf('://')+3) // like: example.com
+
+            console.log("expanded url is: " + expanded_url)
 
             if (expanded_url.length >= 50) {
               twit.updateStatus('@' + userToRespondTo + " sorry, " + shortened_url + " is a bit too long for me to test. Check out domai.nr, though!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
