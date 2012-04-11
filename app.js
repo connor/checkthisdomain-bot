@@ -53,17 +53,13 @@ twit
 
 
         request("http://expandurl.appspot.com/expand?url=" + shortened_url, function(error, response, body) {
-          if (!error || !response.statusCode === 500) {
+          if (!response.statusCode === 500) {
             var json_body = JSON.parse( body )
             
             expanded_url = decodeURIComponent( json_body.end_url ) // like: http://example.com
             expanded_url = expanded_url.substr(expanded_url.indexOf('://')+3) // like: example.com
 
-            console.log("expanded url is: " + expanded_url)
-
             if (expanded_url.length >= 50) {
-
-              console.log('note: the domain requested, ' + expanded_url + ' was too long.')
 
               twit.updateStatus('@' + userToRespondTo + " sorry, " + shortened_url + " is a bit too long for me to test. Check out domai.nr, though!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
                   if (err) { console.log(err) }
@@ -71,37 +67,42 @@ twit
             } 
 
             else {
-              
-                domainr.info(expanded_url, function(responseFromDomainr) {
 
+              console.log("OUTSIDE of domainr.info")
+              console.log("user to respond to: " + userToRespondTo)
+              console.log('expanded url: ' + expanded_url)
 
-                  console.log("the domain is: " + responseFromDomainr.availability)
+              domainr.info(expanded_url, function(responseFromDomainr) {
 
-                  switch (responseFromDomainr.availability) {
-                    case "available":
-                      twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
-                        if (err) { console.log(err) }
-                      })
+                console.log("INSIDE of domainr.info")
+
+                console.log("the domain is: " + responseFromDomainr.availability)
+
+                switch (responseFromDomainr.availability) {
+                  case "available":
+                    twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
+                      if (err) { console.log(err) }
+                    })
+                  break;
+
+                  case "taken":
+                    twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is taken =(", function(err, data) {
+                      if (err) { console.log(err) }
+                    })
                     break;
 
-                    case "taken":
-                      twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is taken =(", function(err, data) {
-                        if (err) { console.log(err) }
-                      })
-                      break;
+                  case "unknown":
+                    twit.updateStatus('@' + userToRespondTo + " hmmm. Domai.nr says it's 'unknown'. Why don't you check on their site? http://domai.nr", function(err, data) {
+                      if (err) { console.log(err) }
+                    })
+                    break;
 
-                    case "unknown":
-                      twit.updateStatus('@' + userToRespondTo + " hmmm. Domai.nr says it's 'unknown'. Why don't you check on their site? http://domai.nr", function(err, data) {
-                        if (err) { console.log(err) }
-                      })
-                      break;
-
-                    case "default":
-                      twit.updateStatus('@' + userToRespondTo + " hmmm. not sure what's wrong, but something is. Please use domai.nr.", function(err, data) {
-                        if (err) { console.log(err) }
-                      })
-                      break;
-                  }
+                  case "default":
+                    twit.updateStatus('@' + userToRespondTo + " hmmm. not sure what's wrong, but something is. Please use domai.nr.", function(err, data) {
+                      if (err) { console.log(err) }
+                    })
+                    break;
+                }
 
               })
             }
