@@ -42,7 +42,7 @@ twit
   .stream('statuses/filter', {'track':'@checkthisdomain'}, function(stream) {
     stream.on('data', function (tweet) {
 
-      console.log("tweet is: " + tweet)
+      console.log("tweet is: " + JSON.stringify(tweet) )
 
       if (tweet.in_reply_to_screen_name === "checkthisdomain" && !tweet.retweeted) {
 
@@ -62,12 +62,18 @@ twit
             console.log("expanded url is: " + expanded_url)
 
             if (expanded_url.length >= 50) {
+
+              console.log('note: the domain requested, ' + expanded_url + ' was too long.')
+
               twit.updateStatus('@' + userToRespondTo + " sorry, " + shortened_url + " is a bit too long for me to test. Check out domai.nr, though!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
                   if (err) { console.log(err) }
               })
-            } else {
+            } 
+
+            else {
                 domainr.info(expanded_url, function(responseFromDomainr) {
 
+                  
                   console.log("the domain is: " + responseFromDomainr.availability)
 
                   switch (responseFromDomainr.availability) {
