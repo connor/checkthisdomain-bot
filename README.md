@@ -8,7 +8,7 @@ Anyways, it's super simple - send a tweet like this (note that it detects the fi
 
 Go ahead, <a href="https://twitter.com/intent/tweet?text=%40checkthisdomain%20connormontgomery.com">give it a try!</a>
 
-and it will respond to you whether or not it's taken. Why would you want to use this instead of Domai.nr, the chrome extension, or manually going to a site? I don't know, but it sounded fun to build (and it was).
+and it will respond to you whether or not it's taken. Why would you want to use this instead of Domai.nr, the chrome extension, or manually going to a site? I don't know, but it sounded fun to build.
 
 ## Credits
 
