@@ -16,6 +16,7 @@ app.listen(port, function() {
   console.log("Listening on " + port);
 });
 
+console.log(process.env.NODE_ENV)
 
 if (process.env.NODE_ENV === "production") {
   var twit = new Twitter({
