@@ -71,9 +71,11 @@ twit
             } 
 
             else {
+
+                console.log('sup, i\'m in the else')
                 domainr.info(expanded_url, function(responseFromDomainr) {
 
-                  
+
                   console.log("the domain is: " + responseFromDomainr.availability)
 
                   switch (responseFromDomainr.availability) {
