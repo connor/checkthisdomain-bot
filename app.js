@@ -71,8 +71,7 @@ twit
             } 
 
             else {
-
-                console.log('sup, i\'m in the else')
+              
                 domainr.info(expanded_url, function(responseFromDomainr) {
 
 
