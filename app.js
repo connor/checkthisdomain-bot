@@ -10,8 +10,8 @@ if (process.env.USER === "cnnr") {
 }
 
 
-var app = express.createServer(express.logger()),
-    port = process.env.PORT || 3000;
+var app   = express.createServer(express.logger())
+  , port  = process.env.PORT || 3000;
 
 app.listen(port, function() {
   console.log("Listening on " + port);
@@ -25,71 +25,68 @@ var twit = new Twitter({
 })
 
 
- twit
-    .verifyCredentials(function (err, data) {
-      if (err) { console.log(err) }
-    })
-    .stream('statuses/filter', {'track':'@checkthisdomain'}, function(stream) {
-      stream.on('data', function (tweet) {
+twit
+  .verifyCredentials(function (err, data) {
+    if (err) { console.log(err) }
+  })
+  .stream('statuses/filter', {'track':'@checkthisdomain'}, function(stream) {
+    stream.on('data', function (tweet) {
 
-        if (tweet.in_reply_to_screen_name === "checkthisdomain" && !tweet.retweeted) {
+      if (tweet.in_reply_to_screen_name === "checkthisdomain" && !tweet.retweeted) {
 
-          var shortened_url       = encodeURIComponent( tweet.text.split(' ')[1] )
-            , userToRespondTo     = tweet.user.screen_name
-            , reply_to_status_id  = tweet.id_str
-            , expanded_url;
+        var shortened_url       = encodeURIComponent( tweet.text.split(' ')[1] )
+          , userToRespondTo     = tweet.user.screen_name
+          , reply_to_status_id  = tweet.id_str
+          , expanded_url;
 
 
-          request("http://expandurl.appspot.com/expand?url=" + shortened_url, function(error, response, body) {
-            if (!error && !response.statusCode === 500) {
-              var json_body = JSON.parse( body )
-              
-              expanded_url = decodeURIComponent( json_body.end_url ) // like: http://example.com
+        request("http://expandurl.appspot.com/expand?url=" + shortened_url, function(error, response, body) {
+          if (!error && !response.statusCode === 500) {
+            var json_body = JSON.parse( body )
+            
+            expanded_url = decodeURIComponent( json_body.end_url ) // like: http://example.com
 
-              expanded_url = expanded_url.substr(expanded_url.indexOf('://')+3) // like: example.com
+            expanded_url = expanded_url.substr(expanded_url.indexOf('://')+3) // like: example.com
 
-              domainr.info(expanded_url, function(responseFromDomainr) {
-         
-                if (!responseFromDomainr.statusCode === 500) {
+            domainr.info(expanded_url, function(responseFromDomainr) {
+       
+              if (!responseFromDomainr.statusCode === 500) {
 
-                    switch (responseFromDomainr.availability) {
-                      case "available":
-                        twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
-                          if (err) { console.log(err) }
-                        })
-                      break;
+                switch (responseFromDomainr.availability) {
+                  case "available":
+                    twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
+                      if (err) { console.log(err) }
+                    })
+                  break;
 
-                      case "taken":
-                        twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is taken =(", function(err, data) {
-                          if (err) { console.log(err) }
-                        })
-                        break;
+                  case "taken":
+                    twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is taken =(", function(err, data) {
+                      if (err) { console.log(err) }
+                    })
+                    break;
 
-                      case "unknown":
-                        twit.updateStatus('@' + userToRespondTo + " hmmm. Domai.nr says it's 'unknown'. Why don't you check on their site? http://domai.nr", function(err, data) {
-                          if (err) { console.log(err) }
-                        })
-                        break;
-                    }
-                } else {
-                  twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is an invalid search. Make sure it's a valid domain, or use http://domai.nr. Thx!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
-                          if (err) { console.log(err) }
-                        }
-                    )
+                  case "unknown":
+                    twit.updateStatus('@' + userToRespondTo + " hmmm. Domai.nr says it's 'unknown'. Why don't you check on their site? http://domai.nr", function(err, data) {
+                      if (err) { console.log(err) }
+                    })
+                    break;
                 }
+              } else {
+                twit.updateStatus('@' + userToRespondTo + " that is an invalid search. Make sure it's a valid domain, or use http://domai.nr. Thx!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
+                    if (err) { console.log(err) }
+                  })
+              }
 
-              })
+            })
 
+          } else {
+            twit.updateStatus('@' + userToRespondTo + " that is an invalid search. Make sure it's a valid domain, or use http://domai.nr. Thx!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
+                if (err) { console.log(err) }
+              }
+            )
+          }
+        })
 
-            } else {
-              twit.updateStatus('@' + userToRespondTo + " " + shortened_url + " is an invalid search. Make sure it's a valid domain, or use http://domai.nr. Thx!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
-                  if (err) { console.log(err) }
-                }
-              )
-            }
-          })
-
-
-        }
-      });
+      }
     });
+  });
