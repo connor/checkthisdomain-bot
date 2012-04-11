@@ -41,7 +41,7 @@ twit
 
 
         request("http://expandurl.appspot.com/expand?url=" + shortened_url, function(error, response, body) {
-          if (!error && !response.statusCode === 500) {
+          if (!error || !response.statusCode === 500) {
             var json_body = JSON.parse( body )
             
             expanded_url = decodeURIComponent( json_body.end_url ) // like: http://example.com
@@ -50,8 +50,10 @@ twit
 
             domainr.info(expanded_url, function(responseFromDomainr) {
        
+                console.log(responseFromDomainr)
 
               switch (responseFromDomainr.availability) {
+
                 case "available":
                   twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
                     if (err) { console.log(err) }
@@ -75,7 +77,7 @@ twit
 
 
           } else {
-            twit.updateStatus('@' + userToRespondTo + " that is an invalid search. Make sure it's a valid domain, or use http://domai.nr. Thx!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
+            twit.updateStatus('@' + userToRespondTo + " that is an INVALID search. Make sure it's a valid domain, or use http://domai.nr. Thx!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
                 if (err) { console.log(err) }
               }
             )

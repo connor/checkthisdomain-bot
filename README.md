@@ -4,9 +4,12 @@ Checkthisdomain is a twitter bot that tells you whether a specific domain is ava
 
 Anyways, it's super simple - send a tweet like this (note that it detects the first string that follows `@checkthisdomain` with a space):
 
-	> @checkthisdomain connormontgomery.com
+	@checkthisdomain connormontgomery.com
+
+Go ahead, <a href="https://twitter.com/intent/tweet?text=%40checkthisdomain%20connormontgomery.com">give it a try!</a>
 
 and it will respond to you whether or not it's taken. Why would you want to use this instead of Domai.nr, the chrome extension, or manually going to a site? I don't know, but it sounded fun to build.
 
-^5's,
+^5's & <3,
+
 Connor
