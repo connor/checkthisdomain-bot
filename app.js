@@ -42,8 +42,6 @@ twit
   .stream('statuses/filter', {'track':'@checkthisdomain'}, function(stream) {
     stream.on('data', function (tweet) {
 
-      // console.log("tweet is: " + JSON.stringify(tweet) )
-
       if (tweet.in_reply_to_screen_name === "checkthisdomain" && !tweet.retweeted) {
 
         var shortened_url       = encodeURIComponent( tweet.text.split(' ')[1] )
@@ -68,15 +66,7 @@ twit
 
             else {
 
-              console.log("OUTSIDE of domainr.info")
-              console.log("user to respond to: " + userToRespondTo)
-              console.log('expanded url: ' + expanded_url)
-
               domainr.info(expanded_url, function(responseFromDomainr) {
-
-                console.log("INSIDE of domainr.info")
-                console.log(responseFromDomainr)
-                // console.log("the domain is: " + responseFromDomainr.availability)
 
                 switch (responseFromDomainr.availability) {
                   case "available":
