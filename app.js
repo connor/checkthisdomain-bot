@@ -50,34 +50,29 @@ twit
 
             domainr.info(expanded_url, function(responseFromDomainr) {
        
-              if (!responseFromDomainr.statusCode === 500) {
 
-                switch (responseFromDomainr.availability) {
-                  case "available":
-                    twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
-                      if (err) { console.log(err) }
-                    })
-                  break;
-
-                  case "taken":
-                    twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is taken =(", function(err, data) {
-                      if (err) { console.log(err) }
-                    })
-                    break;
-
-                  case "unknown":
-                    twit.updateStatus('@' + userToRespondTo + " hmmm. Domai.nr says it's 'unknown'. Why don't you check on their site? http://domai.nr", function(err, data) {
-                      if (err) { console.log(err) }
-                    })
-                    break;
-                }
-              } else {
-                twit.updateStatus('@' + userToRespondTo + " that is an invalid search. Make sure it's a valid domain, or use http://domai.nr. Thx!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
+              switch (responseFromDomainr.availability) {
+                case "available":
+                  twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
                     if (err) { console.log(err) }
                   })
+                break;
+
+                case "taken":
+                  twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is taken =(", function(err, data) {
+                    if (err) { console.log(err) }
+                  })
+                  break;
+
+                case "unknown":
+                  twit.updateStatus('@' + userToRespondTo + " hmmm. Domai.nr says it's 'unknown'. Why don't you check on their site? http://domai.nr", function(err, data) {
+                    if (err) { console.log(err) }
+                  })
+                  break;
               }
 
             })
+
 
           } else {
             twit.updateStatus('@' + userToRespondTo + " that is an invalid search. Make sure it's a valid domain, or use http://domai.nr. Thx!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
