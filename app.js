@@ -47,17 +47,14 @@ twit
             expanded_url = decodeURIComponent( json_body.end_url ) // like: http://example.com
             expanded_url = expanded_url.substr(expanded_url.indexOf('://')+3) // like: example.com
 
-            console.log(expanded_url.length)
-
             if (expanded_url.length >= 50) {
               twit.updateStatus('@' + userToRespondTo + " sorry, " + shortened_url + " is a bit too long for me to test. Check out domai.nr, though!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
                   if (err) { console.log(err) }
               })
             } else {
                 domainr.info(expanded_url, function(responseFromDomainr) {
-         
-                  switch (responseFromDomainr.availability) {
 
+                  switch (responseFromDomainr.availability) {
                     case "available":
                       twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
                         if (err) { console.log(err) }
