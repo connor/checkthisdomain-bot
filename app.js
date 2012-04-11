@@ -54,6 +54,8 @@ twit
             } else {
                 domainr.info(expanded_url, function(responseFromDomainr) {
 
+                  console.log("the domain is: " + responseFromDomainr.availability)
+
                   switch (responseFromDomainr.availability) {
                     case "available":
                       twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
