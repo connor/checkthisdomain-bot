@@ -1,13 +1,12 @@
+if (process.env.NODE_ENV != "production") {
+  var config    = require('./config')  
+}
+
 var express     = require('express')
   , Twitter     = require('ntwitter')
 	, sys 				= require('sys')
 	, domainr 		= require('Domai.nr')
   , request     = require('request')
-  
-
-if (process.env.USER === "cnnr") {
-  config      = require('./config')
-}
 
 
 var app   = express.createServer(express.logger())
@@ -17,12 +16,22 @@ app.listen(port, function() {
   console.log("Listening on " + port);
 });
 
-var twit = new Twitter({
-    consumer_key: process.env['CONSUMER_KEY'] || config.CONSUMER_KEY
-  , consumer_secret: process.env['CONSUMER_SECRET'] || config.CONSUMER_SECRET
-  , access_token_key: process.env['TOKEN_KEY'] || config.TOKEN_KEY
-  , access_token_secret: process.env['TOKEN_SECRET'] || config.TOKEN_SECRET
-})
+
+if (process.env.NODE_ENV === "production") {
+  var twit = new Twitter({
+      consumer_key: process.env.CONSUMER_KEY
+    , consumer_secret: process.env.CONSUMER_SECRET
+    , access_token_key: process.env.TOKEN_KEY
+    , access_token_secret: process.env.TOKEN_SECRET
+  })
+} else {
+  var twit = new Twitter({
+      consumer_key: config.CONSUMER_KEY
+    , consumer_secret: config.CONSUMER_SECRET
+    , access_token_key: config.TOKEN_KEY
+    , access_token_secret:  config.TOKEN_SECRET
+  })
+}
 
 
 twit
