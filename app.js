@@ -34,8 +34,11 @@ var twit = new Twitter({
 
         if (tweet.in_reply_to_screen_name === "checkthisdomain" && !tweet.retweeted) {
 
-          var shortened_url     = encodeURIComponent( tweet.text.split(' ')[1] )
-            , userToRespondTo   = tweet.user.screen_name
+          console.log(tweet)
+
+          var shortened_url       = encodeURIComponent( tweet.text.split(' ')[1] )
+            , userToRespondTo     = tweet.user.screen_name
+            , reply_to_status_id  = tweet.id_str
             , expanded_url;
 
 
@@ -45,17 +48,13 @@ var twit = new Twitter({
               
               expanded_url = decodeURIComponent( json_body.end_url ) // like: http://example.com
 
-              console.log("1: " + expanded_url)
-
               expanded_url = expanded_url.substr(expanded_url.indexOf('://')+3) // like: example.com
-
-              console.log("2: " + expanded_url)
 
               domainr.info(expanded_url, function(responseFromDomainr) {
          
                 switch (responseFromDomainr.availability) {
                   case "available":
-                    twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", function(err, data) {
+                    twit.updateStatus('@' + userToRespondTo + " " + expanded_url + " is available! You can register it here: " + responseFromDomainr.register_url + " <3", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
                       if (err) { console.log(err) }
                     })
                   break;
