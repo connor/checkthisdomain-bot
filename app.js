@@ -75,8 +75,8 @@ twit
               domainr.info(expanded_url, function(responseFromDomainr) {
 
                 console.log("INSIDE of domainr.info")
-
-                console.log("the domain is: " + responseFromDomainr.availability)
+                console.log(responseFromDomainr)
+                // console.log("the domain is: " + responseFromDomainr.availability)
 
                 switch (responseFromDomainr.availability) {
                   case "available":
