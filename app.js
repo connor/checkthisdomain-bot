@@ -59,7 +59,7 @@ twit
 
             if (expanded_url.length >= 60) {
 
-              twit.updateStatus('@' + userToRespondTo + " sorry, " + shortened_url + " is a bit too long for me to test. Check out domai.nr, though!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
+              twit.updateStatus('@' + userToRespondTo + " sorry, " + shortened_url + " is a bit too long for me to test. Check out domainr.com, though!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
                   if (err) { console.log("ERROR!\n" + err) }
               })
             } 
@@ -82,13 +82,13 @@ twit
                     break;
 
                   case "unknown":
-                    twit.updateStatus('@' + userToRespondTo + " hmmm. Domai.nr says it's 'unknown'. Why don't you check on their site? http://domai.nr", function(err, data) {
+                    twit.updateStatus('@' + userToRespondTo + " hmmm. Domainr says it's 'unknown'. Why don't you check on their site? https://domainr.com", function(err, data) {
                       if (err) { console.log("ERROR!\n" + err) }
                     })
                     break;
 
                   case "default":
-                    twit.updateStatus('@' + userToRespondTo + " hmmm. not sure what's wrong, but something is. Please use domai.nr.", function(err, data) {
+                    twit.updateStatus('@' + userToRespondTo + " hmmm. not sure what's wrong, but something is. Please use domainr.com.", function(err, data) {
                       if (err) { console.log("ERROR!\n" + err) }
                     })
                     break;
@@ -98,7 +98,7 @@ twit
             }
 
           } else {
-            twit.updateStatus('@' + userToRespondTo + " that is an invalid search. Make sure it's a valid domain, or use http://domai.nr. Thx!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
+            twit.updateStatus('@' + userToRespondTo + " that is an invalid search. Make sure it's a valid domain, or use https://domainr.com. Thx!", {in_reply_to_status_id: reply_to_status_id}, function(err, data) {
                 if (err) { console.log("ERROR!\n" + err) }
               }
             )
